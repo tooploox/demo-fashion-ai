@@ -26,6 +26,7 @@ export async function generate(file: File) {
       },
       body: JSON.stringify({
         model_input: {
+          webhook_endpoint: "https://demo-fashion-ai.vercel.app/api/webhook",
           workflow_values: {
             product_image: blob.url,
           },

@@ -6,4 +6,5 @@ export const dbPromptSchema = z.object({
   baseten_request_id: z.string(),
   prompt_image_url: z.string(),
   status: z.enum(["in_progress", "succeeded", "failed"]),
+  created_at: z.date(),
 });

@@ -25,8 +25,8 @@ export async function generate(file: File) {
         Authorization: `Api-Key ${process.env.AI_GENERATION_API_KEY}`,
       },
       body: JSON.stringify({
+        webhook_endpoint: "https://demo-fashion-ai.vercel.app/api/webhook",
         model_input: {
-          webhook_endpoint: "https://demo-fashion-ai.vercel.app/api/webhook",
           workflow_values: {
             product_image: blob.url,
           },

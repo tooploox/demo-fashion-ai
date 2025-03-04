@@ -1,13 +1,7 @@
+import { dbPromptSchema } from "@/schemas";
 import { neon } from "@neondatabase/serverless";
-import { z } from "zod";
 
 const sql = neon(process.env.DATABASE_URL!);
-const promptSchema = z.object({
-  id: z.string(),
-  baseten_request_id: z.string(),
-  prompt_image_url: z.string(),
-  status: z.enum(["in_progress", "succeeded", "failed"]),
-});
 
 export default async function ResultPage({
   params,
@@ -17,7 +11,7 @@ export default async function ResultPage({
   const { id } = await params;
 
   const raw = await sql("SELECT * FROM prompts WHERE id = $1", [id]);
-  const data = promptSchema.parse(raw[0]);
+  const data = dbPromptSchema.parse(raw[0]);
 
   return (
     <div className="flex flex-col gap-6">

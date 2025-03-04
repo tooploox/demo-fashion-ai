@@ -1,4 +1,5 @@
-// import { neon } from "@neondatabase/serverless";
+import { neon } from "@neondatabase/serverless";
+import { put } from "@vercel/blob";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -7,22 +8,37 @@ const basetenRequestSchema = z.object({
   request_id: z.string(),
   time: z.string(),
   data: z.object({
-    result: z.any(),
+    result: z.array(
+      z.object({
+        data: z.string(),
+        format: z.string(),
+      }),
+    ),
   }),
 });
 
 export async function POST(req: Request) {
   const json = await req.json();
   const { request_id, data } = basetenRequestSchema.parse(json);
+  const result = data.result[0];
 
-  console.log(request_id, data.result);
-  console.log(request_id, JSON.stringify(data.result));
-
-  // const sql = neon(process.env.DATABASE_URL!);
-  // await sql("UPDATE prompts SET status = $1 WHERE baseten_request_id = $2", [
-  //   "succeded",
-  //   request_id,
-  // ]);
+  const sql = neon(process.env.DATABASE_URL!);
+  try {
+    const imageBuffer = Buffer.from(result.data, "base64");
+    const uuid = crypto.randomUUID();
+    const { url } = await put(`${uuid}.png`, imageBuffer, {
+      access: "public",
+    });
+    await sql(
+      "UPDATE prompts SET status = $1, result_image_url = $2 WHERE baseten_request_id = $3",
+      ["succeded", url, request_id],
+    );
+  } catch {
+    await sql("UPDATE prompts SET status = $1 WHERE baseten_request_id = $2", [
+      "failed",
+      request_id,
+    ]);
+  }
 
   return NextResponse.json({ success: true });
 }

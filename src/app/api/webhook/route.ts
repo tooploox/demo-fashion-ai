@@ -24,16 +24,21 @@ export async function POST(req: Request) {
 
   const sql = neon(process.env.DATABASE_URL!);
   try {
-    const imageBuffer = Buffer.from(result.data, "base64");
     const uuid = crypto.randomUUID();
-    const { url } = await put(`${uuid}.png`, imageBuffer, {
-      access: "public",
-    });
+    const imageBuffer = Buffer.from(result.data, "base64");
+    const { url } = await put(
+      `${uuid}.png`,
+      new Blob([imageBuffer], { type: "image/png" }),
+      {
+        access: "public",
+      },
+    );
     await sql(
       "UPDATE prompts SET status = $1, result_image_url = $2 WHERE baseten_request_id = $3",
       ["succeded", url, request_id],
     );
-  } catch {
+  } catch (error) {
+    console.error(error);
     await sql("UPDATE prompts SET status = $1 WHERE baseten_request_id = $2", [
       "failed",
       request_id,

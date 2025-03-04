@@ -23,7 +23,21 @@ export default async function ResultPage({
         <p>ID: {data.id}</p>
         <p>Status: {data.status}</p>
         <p>Baseten request id: {data.baseten_request_id}</p>
-        <img className="w-[128px]" src={data.prompt_image_url} alt="" />
+
+        <div className="flex gap-6">
+          <figure>
+            <figcaption>Input</figcaption>
+            <img className="w-[300px]" src={data.prompt_image_url} alt="" />
+          </figure>
+          <figure>
+            <figcaption>Output</figcaption>
+            {data.result_image_url ? (
+              <img className="w-[300px]" src={data.result_image_url} alt="" />
+            ) : (
+              "No result image"
+            )}
+          </figure>
+        </div>
       </div>
     </div>
   );

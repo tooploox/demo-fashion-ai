@@ -35,7 +35,7 @@ export async function POST(req: Request) {
     );
     await sql(
       "UPDATE prompts SET status = $1, result_image_url = $2 WHERE baseten_request_id = $3",
-      ["succeded", url, request_id],
+      ["succeeded", url, request_id],
     );
   } catch (error) {
     console.error(error);

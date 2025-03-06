@@ -98,7 +98,7 @@ const Item = ({ id, status, resultUrl, promptUrl }: ItemProps) => {
     return (
       <li className="relative h-full overflow-hidden rounded-md border">
         <p className="pointer-events-none absolute inset-0 grid place-items-center bg-black/80 text-sm text-white">
-          Generation failed
+          Failed
         </p>
         <Link href={`/result/${id}`}>
           <img src={promptUrl} className="h-full w-full object-cover" />

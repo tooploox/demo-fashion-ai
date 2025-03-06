@@ -26,7 +26,9 @@ export async function generate(
     access: "public",
   });
 
-  // TODO: promptOptions
+  // TODO: LLM - Implement the AI for description
+  const description =
+    "A middle-aged Nordic woman stands confidently in a photo studio, surrounded by a professional lighting setup. She has cool-toned blonde hair and striking blue eyes, reflecting her Nordic heritage. Dressed in an elegant winter ensemble, she exudes sophistication and warmth despite the chilly season. The studio’s soft lighting highlights the texture of her cozy, high-quality knitwear, adding depth and realism to the image.";
 
   const resp = await fetch(
     `${process.env.AI_GENERATION_URL}/development/async_predict`,
@@ -40,6 +42,7 @@ export async function generate(
         model_input: {
           workflow_values: {
             product_image: blob.url,
+            photo_description: description,
           },
         },
       }),

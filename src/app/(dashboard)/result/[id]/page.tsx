@@ -16,7 +16,7 @@ const useResult = (id: string | string[] | undefined) => {
         .then((res) => res.json())
         .then((data) => dtoPromptSchema.parse(data)),
     {
-      refreshInterval: (data) => (data?.status === "in_progress" ? 5000 : 0),
+      refreshInterval: (data) => (data?.status === "in_progress" ? 10000 : 0),
       shouldRetryOnError: false,
     },
   );

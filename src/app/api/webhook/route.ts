@@ -8,24 +8,41 @@ const basetenRequestSchema = z.object({
   request_id: z.string(),
   time: z.string(),
   data: z.object({
-    result: z.array(
-      z.object({
-        data: z.string(),
-        format: z.string(),
-      }),
-    ),
+    result: z
+      .array(
+        z.object({
+          data: z.string(),
+          format: z.string(),
+        }),
+      )
+      .optional(),
   }),
+  errors: z.array(z.object({ message: z.string() })).optional(),
 });
+
+const sql = neon(process.env.DATABASE_URL!);
+
+const setFailedStatus = async (requestId: string) => {
+  await sql("UPDATE prompts SET status = $1 WHERE baseten_request_id = $2", [
+    "failed",
+    requestId,
+  ]);
+};
 
 export async function POST(req: Request) {
   const json = await req.json();
 
   console.log(JSON.stringify(json));
 
-  const { request_id, data } = basetenRequestSchema.parse(json);
-  const result = data.result[0];
+  const { request_id, data, errors } = basetenRequestSchema.parse(json);
 
-  const sql = neon(process.env.DATABASE_URL!);
+  if (!data.result) {
+    console.error(errors?.map((e) => e.message).join(", "));
+    await setFailedStatus(request_id);
+    return new Response("Failed", { status: 400 });
+  }
+
+  const result = data.result[0];
 
   let userID = "unknown";
   try {
@@ -54,10 +71,7 @@ export async function POST(req: Request) {
     );
   } catch (error) {
     console.error(error);
-    await sql("UPDATE prompts SET status = $1 WHERE baseten_request_id = $2", [
-      "failed",
-      request_id,
-    ]);
+    await setFailedStatus(request_id);
   }
 
   return NextResponse.json({ success: true });

@@ -8,23 +8,25 @@ import { useRouter } from "next/navigation";
 import { RadioOptions } from "@/components/RadioOptions";
 import { promptOptions } from "@/schemas";
 
+const getRandomOptions = () =>
+  Object.entries(promptOptions).reduce(
+    (acc, [key, values]) => {
+      acc[key] = values[Math.floor(Math.random() * values.length)];
+      return acc;
+    },
+    {} as Record<string, string>,
+  );
+
 export default function GeneratePage() {
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
-  const [options, setOptions] = useState<Record<string, string>>({});
+  const [options, setOptions] =
+    useState<Record<string, string>>(getRandomOptions);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const randomDetails = () => {
-    setOptions(
-      Object.entries(promptOptions).reduce(
-        (acc, [key, values]) => {
-          acc[key] = values[Math.floor(Math.random() * values.length)];
-          return acc;
-        },
-        {} as Record<string, string>,
-      ),
-    );
+    setOptions(getRandomOptions());
   };
 
   return (

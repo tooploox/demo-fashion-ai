@@ -20,46 +20,45 @@ export default function RegisterPage() {
   });
 
   return (
-    <div className="flex flex-col gap-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Register</CardTitle>
-          <CardDescription>
+    <div className="lg:p-8">
+      <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+        <div className="flex flex-col space-y-2 text-center">
+          <h1 className="text-2xl font-semibold tracking-tight">Register</h1>
+          <p className="text-sm text-muted-foreground">
             Create your account by entering your email and password below
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form action={formAction}>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  name="email"
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="password">Password</Label>
-                <Input name="password" id="password" type="password" required />
-              </div>
-              <Button type="submit" className="w-full" disabled={pending}>
-                Register
-              </Button>
+          </p>
+        </div>
+        <form action={formAction}>
+          <div className="flex flex-col gap-6">
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                name="email"
+                id="email"
+                type="email"
+                placeholder="m@example.com"
+                required
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="password">Password</Label>
+              <Input name="password" id="password" type="password" required />
+            </div>
+            <Button type="submit" className="w-full" disabled={pending}>
+              Register
+            </Button>
 
-              <p aria-live="polite">{state?.error}</p>
-            </div>
-            <div className="mt-4 text-center text-sm">
-              Already have an account?{" "}
-              <Link href="/login" className="underline underline-offset-4">
-                Login
-              </Link>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+            <p aria-live="polite">{state?.error}</p>
+          </div>
+          <p className="px-8 text-center text-sm text-muted-foreground">
+            Already have an account?{" "}
+            <Link href="/login" className="underline underline-offset-4">
+              Sign In
+            </Link>
+            .
+          </p>
+        </form>
+      </div>
     </div>
   );
 }

@@ -19,15 +19,30 @@ const basetenRequestSchema = z.object({
 
 export async function POST(req: Request) {
   const json = await req.json();
+
+  console.log(JSON.stringify(json));
+
   const { request_id, data } = basetenRequestSchema.parse(json);
   const result = data.result[0];
 
   const sql = neon(process.env.DATABASE_URL!);
+
+  let userID = "unknown";
+  try {
+    const [result] = await sql(
+      "SELECT user_id FROM prompts WHERE baseten_request_id = $1",
+      [request_id],
+    );
+    userID = result.user_id;
+  } catch {
+    // ignore
+  }
+
   try {
     const uuid = crypto.randomUUID();
     const imageBuffer = Buffer.from(result.data, "base64");
     const { url } = await put(
-      `${uuid}.png`,
+      `${userID}/${uuid}.png`,
       new Blob([imageBuffer], { type: "image/png" }),
       {
         access: "public",

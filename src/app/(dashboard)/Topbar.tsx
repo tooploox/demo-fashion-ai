@@ -1,5 +1,6 @@
 "use client";
 
+import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@stackframe/stack";
 import Link from "next/link";
@@ -10,7 +11,7 @@ export function Topbar() {
   return (
     <header className="sticky top-0 flex h-16 w-full shrink-0 items-center gap-2 border-b bg-background px-4">
       <Link href="/">
-        <h1 className="font-semibold">Fashion AI</h1>
+        <Logo />
       </Link>
       <div className="ml-auto flex items-center gap-4">
         <p className="text-sm font-medium">

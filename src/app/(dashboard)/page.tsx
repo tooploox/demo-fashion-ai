@@ -8,26 +8,66 @@ import { z } from "zod";
 
 const sql = neon(process.env.DATABASE_URL!);
 
+const examples = [
+  "https://plus.unsplash.com/premium_photo-1739899051410-af2e7a9c0f2e?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://plus.unsplash.com/premium_photo-1739899051410-af2e7a9c0f2e?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://plus.unsplash.com/premium_photo-1739899051410-af2e7a9c0f2e?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://plus.unsplash.com/premium_photo-1739899051410-af2e7a9c0f2e?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+];
+
 export default async function HomePage() {
   const user = await stackServerApp.getUser();
-  const raw = await sql("SELECT * FROM prompts WHERE user_id = $1", [user?.id]);
+  const raw = await sql(
+    "SELECT * FROM prompts WHERE user_id = $1 ORDER BY created_at DESC",
+    [user?.id],
+  );
   const items = z.array(dbPromptSchema).parse(raw);
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Generated outfits</h2>
-        <Button variant="outline" asChild>
+        <h2 className="text-xl font-semibold">Generated images</h2>
+        <Button asChild>
           <Link href="/generate">
             <Sparkle /> Generate new
           </Link>
         </Button>
       </div>
 
-      <ul className="grid grid-cols-[repeat(auto-fill,200px)] gap-4">
+      {items.length === 0 ? (
+        <>
+          <div className="flex flex-col items-center gap-4 rounded-lg bg-zinc-50 p-8 text-center">
+            <p className="text-sm text-muted-foreground">
+              Nothing here… yet! Try generating an image and see the magic
+              happen.
+            </p>
+          </div>
+
+          <div>
+            <p className="mb-4 text-sm font-semibold">Example images</p>
+            <ul className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-4">
+              {examples.map((url, index) => (
+                <li key={index}>
+                  <img
+                    src="https://plus.unsplash.com/premium_photo-1739899051410-af2e7a9c0f2e?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    className="h-full w-full rounded-md object-cover"
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </>
+      ) : null}
+
+      <ul className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4">
         {items.map((item) => (
-          // TODO: use generated image / status
-          <Item key={item.id} id={item.id} src={item.prompt_image_url} />
+          <Item
+            key={item.id}
+            id={item.id}
+            status={item.status}
+            resultUrl={item.result_image_url}
+            promptUrl={item.prompt_image_url}
+          />
         ))}
       </ul>
     </div>
@@ -36,13 +76,44 @@ export default async function HomePage() {
 
 type ItemProps = {
   id: string;
-  src: string;
+  status: "in_progress" | "succeeded" | "failed";
+  resultUrl: string | null;
+  promptUrl: string;
 };
-const Item = ({ id, src }: ItemProps) => {
+const Item = ({ id, status, resultUrl, promptUrl }: ItemProps) => {
+  if (status === "succeeded") {
+    return (
+      <li className="h-full overflow-hidden rounded-md border">
+        <Link href={`/result/${id}`}>
+          <img
+            src={resultUrl ?? undefined}
+            className="h-full w-full object-cover"
+          />
+        </Link>
+      </li>
+    );
+  }
+
+  if (status === "failed") {
+    return (
+      <li className="relative h-full overflow-hidden rounded-md border">
+        <p className="pointer-events-none absolute inset-0 grid place-items-center bg-black/80 text-sm text-white">
+          Generation failed
+        </p>
+        <Link href={`/result/${id}`}>
+          <img src={promptUrl} className="h-full w-full object-cover" />
+        </Link>
+      </li>
+    );
+  }
+
   return (
-    <li className="h-full overflow-hidden rounded-md border">
+    <li className="relative h-full overflow-hidden rounded-md border">
+      <p className="pointer-events-none absolute inset-0 grid place-items-center bg-black/80 text-sm text-white">
+        In progress
+      </p>
       <Link href={`/result/${id}`}>
-        <img src={src} className="h-full w-full object-cover" />
+        <img src={promptUrl} className="h-full w-full object-cover" />
       </Link>
     </li>
   );

@@ -130,7 +130,7 @@ export function FileDropzone({
   return (
     <div className={`space-y-4 ${className}`}>
       <div
-        className={`relative flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-6 transition-colors ${
+        className={`relative flex flex-col items-center justify-center rounded-lg border-2 border-dashed bg-white p-6 transition-colors ${
           isDragging
             ? "border-primary bg-primary/5"
             : "border-muted-foreground/25 hover:border-primary/50"
@@ -179,7 +179,7 @@ export function FileDropzone({
           <p className="text-sm font-medium">
             Files ({files.length}/{maxFiles})
           </p>
-          <ul className="divide-y divide-border rounded-md border">
+          <ul className="divide-y divide-border rounded-md border bg-white">
             {files.map((file, index) => (
               <li key={index} className="flex items-center justify-between p-3">
                 <div className="flex items-center space-x-3">

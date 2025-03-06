@@ -1,40 +1,76 @@
-import { dbPromptSchema } from "@/schemas";
-import { neon } from "@neondatabase/serverless";
+"use client";
 
-const sql = neon(process.env.DATABASE_URL!);
+import useSWR from "swr";
+import { dtoPromptSchema } from "@/schemas";
 
-export default async function ResultPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
+import { useParams, useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import { RadioOptions } from "@/components/RadioOptions";
+import { Fragment } from "react";
 
-  const raw = await sql("SELECT * FROM prompts WHERE id = $1", [id]);
-  const data = dbPromptSchema.parse(raw[0]);
+const useResult = (id: string | string[] | undefined) => {
+  return useSWR(
+    id ? `/api/prompt/${id}` : null,
+    (...args) =>
+      fetch(...args)
+        .then((res) => res.json())
+        .then((data) => dtoPromptSchema.parse(data)),
+    {
+      refreshInterval: (data) => (data?.status === "in_progress" ? 5000 : 0),
+      shouldRetryOnError: false,
+    },
+  );
+};
+
+export default function ResultPage() {
+  const router = useRouter();
+  const { id } = useParams();
+  const { data, isLoading } = useResult(id);
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Result</h2>
+    <div className="flex flex-col">
+      <div className="mb-6 flex items-center gap-2">
+        <Button variant="outline" size="sm" onClick={() => router.push("/")}>
+          <ArrowLeft />
+        </Button>
+        <h2 className="text-xl font-semibold">Results</h2>
       </div>
 
       <div className="flex flex-col gap-6">
-        <p>ID: {data.id}</p>
-        <p>Status: {data.status}</p>
-        <p>Baseten request id: {data.baseten_request_id}</p>
-
-        <div className="flex gap-6">
-          <figure>
-            <figcaption>Input</figcaption>
-            <img className="w-[300px]" src={data.prompt_image_url} alt="" />
+        <div className="grid grid-cols-3 gap-6">
+          <figure className="flex flex-col gap-4 rounded-md bg-gray-50 p-4">
+            <figcaption className="text-sm font-semibold">Options</figcaption>
+            <div className="grid grid-cols-[min-content_auto] gap-2 gap-x-6">
+              {Object.entries(data?.promptOptions ?? {}).map(([key, value]) => (
+                <Fragment key={key}>
+                  <p className="text-sm font-medium">{key}</p>
+                  <p className="text-sm">{value}</p>
+                </Fragment>
+              ))}
+            </div>
           </figure>
-          <figure>
-            <figcaption>Output</figcaption>
-            {data.result_image_url ? (
-              <img className="w-[300px]" src={data.result_image_url} alt="" />
+          <figure className="flex flex-col gap-4 rounded-md bg-gray-50 p-4">
+            <figcaption className="text-sm font-semibold">Input</figcaption>
+            <img src={data?.promptImageUrl} alt="" />
+          </figure>
+          <figure className="flex flex-col gap-4 rounded-md bg-gray-50 p-4">
+            <figcaption className="text-sm font-semibold">Output</figcaption>
+            {data?.resultImageUrl ? (
+              <img src={data?.resultImageUrl} alt="" />
             ) : (
-              "No result image"
+              <div className="grid h-full place-items-center text-center text-sm text-muted-foreground">
+                {data?.status === "in_progress" ? (
+                  <>
+                    Processing...
+                    <br />
+                    Page will refresh automatically.
+                  </>
+                ) : null}
+                {data?.status === "failed"
+                  ? "Couldn't generate the image."
+                  : null}
+              </div>
             )}
           </figure>
         </div>

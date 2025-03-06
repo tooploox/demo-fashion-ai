@@ -6,7 +6,6 @@ import { dtoPromptSchema } from "@/schemas";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { RadioOptions } from "@/components/RadioOptions";
 import { Fragment } from "react";
 
 const useResult = (id: string | string[] | undefined) => {
@@ -26,7 +25,7 @@ const useResult = (id: string | string[] | undefined) => {
 export default function ResultPage() {
   const router = useRouter();
   const { id } = useParams();
-  const { data, isLoading } = useResult(id);
+  const { data } = useResult(id);
 
   return (
     <div className="flex flex-col">

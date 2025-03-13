@@ -42,3 +42,26 @@ export const promptOptions = {
   Ethnicity: ["European", "East-asian", "Nordic", "Afro-descendent"],
   Season: ["Spring", "Summer", "Autumn", "Winter"],
 };
+
+export const dbInvitationSchema = z.object({
+  id: z.number(),
+  email: z.string(),
+  used: z.boolean(),
+  created_at: z.date(),
+});
+
+export const dtoInvitationSchema = z.object({
+  id: z.number(),
+  email: z.string(),
+  used: z.boolean(),
+  createdAt: z.string(),
+});
+
+export const toDTOInvitation = (
+  db: z.infer<typeof dbInvitationSchema>,
+): z.infer<typeof dtoInvitationSchema> => ({
+  id: db.id,
+  email: db.email,
+  used: db.used,
+  createdAt: db.created_at.toISOString(),
+});

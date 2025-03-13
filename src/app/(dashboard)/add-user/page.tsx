@@ -6,6 +6,23 @@ import { Label } from "@/components/ui/label";
 import { useActionState, useEffect, useState } from "react";
 import { createInvitation } from "./actions";
 import { useUser } from "@stackframe/stack";
+import useSWR from "swr";
+import { dtoInvitationSchema } from "@/schemas";
+import { z } from "zod";
+
+const useInvitations = () => {
+  return useSWR(`/api/invitations`, (...args) =>
+    fetch(...args)
+      .then((res) => res.json())
+      .then((data) =>
+        data.length
+          ? data.map((val: z.infer<typeof dtoInvitationSchema>) =>
+              dtoInvitationSchema.parse(val),
+            )
+          : [],
+      ),
+  );
+};
 
 export default function AddUserPage() {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -14,6 +31,8 @@ export default function AddUserPage() {
     error: "",
   });
 
+  const invitations = useInvitations();
+  console.log(invitations);
   const user = useUser();
 
   useEffect(() => {
@@ -70,6 +89,26 @@ export default function AddUserPage() {
             )}
           </div>
         </form>
+        <div className="mt-6">
+          <h2 className="text-lg font-semibold">Invitations</h2>
+          <ul className="mt-2 rounded border border-gray-300 p-4">
+            {invitations.data?.length && invitations.data?.length > 0 ? (
+              invitations.data.map(
+                (
+                  invite: { email: string; used: boolean; createdAt: string },
+                  index: number,
+                ) => (
+                  <li key={index} className="border-b py-2 last:border-0">
+                    <strong>Email:</strong> {invite.email} <br />
+                    <strong>Used:</strong> {String(invite.used)}
+                  </li>
+                ),
+              )
+            ) : (
+              <p>No active invitations.</p>
+            )}
+          </ul>
+        </div>
       </div>
     </div>
   );

@@ -37,11 +37,12 @@ export default function RegisterPage() {
               <Label htmlFor="password">Password</Label>
               <Input name="password" id="password" type="password" required />
             </div>
+            <p className="text-center text-red-500" aria-live="polite">
+              {state?.error}
+            </p>
             <Button type="submit" className="w-full" disabled={pending}>
               Register
             </Button>
-
-            <p aria-live="polite">{state?.error}</p>
           </div>
           <p className="px-8 text-center text-sm text-muted-foreground">
             Already have an account?{" "}

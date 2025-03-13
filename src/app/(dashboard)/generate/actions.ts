@@ -73,7 +73,10 @@ export async function generate(
       promptOptions,
     ],
   );
-  await user.setClientReadOnlyMetadata({ tokens: currentTokens - 1 });
+  await user.setClientReadOnlyMetadata({
+    tokens: currentTokens - 1,
+    isAdmin: user.clientReadOnlyMetadata.isAdmin,
+  });
 
   return { prompt_id: promptId };
 }

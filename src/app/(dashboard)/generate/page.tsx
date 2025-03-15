@@ -77,7 +77,7 @@ export default function GeneratePage() {
             </div>
 
             <Button
-              className="self-end"
+              className="mt-3 self-end"
               onClick={async () => {
                 if (!file) return;
                 setLoading(true);
@@ -105,7 +105,7 @@ export default function GeneratePage() {
               </div>
             ) : null}
           </div>
-          <div>
+          <div className="hidden sm:block">
             <div className="flex w-[300px] flex-col self-start p-4">
               <p className="mb-2 text-sm font-semibold">Example image</p>
               <img

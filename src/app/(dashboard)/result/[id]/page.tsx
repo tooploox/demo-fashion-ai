@@ -37,7 +37,7 @@ export default function ResultPage() {
       </div>
 
       <div className="flex flex-col gap-6">
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid auto-rows-auto gap-6 sm:grid-cols-3">
           <figure className="flex flex-col gap-4 rounded-md bg-gray-50 p-4">
             <figcaption className="text-sm font-semibold">Options</figcaption>
             <div className="grid grid-cols-[min-content_auto] gap-2 gap-x-6">

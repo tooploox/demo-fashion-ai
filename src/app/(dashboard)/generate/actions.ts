@@ -26,9 +26,36 @@ export async function generate(
     access: "public",
   });
 
-  // TODO: LLM - Implement the AI for description
-  const description =
-    "A middle-aged Nordic woman stands confidently in a photo studio, surrounded by a professional lighting setup. She has cool-toned blonde hair and striking blue eyes, reflecting her Nordic heritage. Dressed in an elegant winter ensemble, she exudes sophistication and warmth despite the chilly season. The studio’s soft lighting highlights the texture of her cozy, high-quality knitwear, adding depth and realism to the image.";
+  const descriptionGPT = await fetch(
+    `${process.env.OPENAI_API_URL}/v1/completions`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: "gpt-3.5-turbo-instruct",
+        prompt: `Prepare a descriptive prompt for Flux image generation model, using the below data: ${Object.entries(
+          promptOptions,
+        )
+          .map((v) => v.join("- "))
+          .join(", ")}`,
+        max_tokens: 100,
+        temperature: 1,
+      }),
+    },
+  );
+
+  const description = (
+    (await descriptionGPT.json()) as { choices?: { text: string }[] }
+  )?.choices?.[0]?.text;
+
+  if (!description) {
+    return {
+      error: "Failed to generate description",
+    };
+  }
 
   const resp = await fetch(
     `${process.env.AI_GENERATION_URL}/development/async_predict`,
@@ -42,7 +69,7 @@ export async function generate(
         model_input: {
           workflow_values: {
             product_image: blob.url,
-            photo_description: description,
+            image_description: description,
           },
         },
       }),

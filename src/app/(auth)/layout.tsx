@@ -11,7 +11,8 @@ export default function AuthLayout({
         <div
           className="absolute inset-0 bg-zinc-900"
           style={{
-            backgroundImage: "url('/auth_bg.jpeg')",
+            backgroundImage:
+              "linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,3)), url('/auth_bg.jpeg')",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}

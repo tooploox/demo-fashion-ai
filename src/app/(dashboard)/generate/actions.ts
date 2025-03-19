@@ -35,7 +35,7 @@ export async function generate(
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: "gpt-3.5-turbo-instruct",
         prompt: `Prepare a descriptive prompt for Flux image generation model, using the below data: ${Object.entries(
           promptOptions,
         )

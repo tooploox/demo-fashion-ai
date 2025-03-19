@@ -35,14 +35,14 @@ export async function generate(
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-3.5-turbo-instruct",
+        model: "gpt-4o-mini",
         prompt: `Prepare a descriptive prompt for Flux image generation model, using the below data: ${Object.entries(
           promptOptions,
         )
           .map((v) => v.join("- "))
           .join(", ")}`,
-        max_tokens: 100,
-        temperature: 1,
+        max_tokens: 200,
+        temperature: 0.7,
       }),
     },
   );

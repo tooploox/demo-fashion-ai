@@ -5,6 +5,7 @@ import { neon } from "@neondatabase/serverless";
 import { Sparkle } from "lucide-react";
 import Link from "next/link";
 import { z } from "zod";
+import { Item } from "./Item";
 
 const sql = neon(process.env.DATABASE_URL!);
 
@@ -73,48 +74,3 @@ export default async function HomePage() {
     </div>
   );
 }
-
-type ItemProps = {
-  id: string;
-  status: "in_progress" | "succeeded" | "failed";
-  resultUrl: string | null;
-  promptUrl: string;
-};
-const Item = ({ id, status, resultUrl, promptUrl }: ItemProps) => {
-  if (status === "succeeded") {
-    return (
-      <li className="h-full overflow-hidden rounded-md border">
-        <Link href={`/result/${id}`}>
-          <img
-            src={resultUrl ?? undefined}
-            className="h-full w-full object-cover"
-          />
-        </Link>
-      </li>
-    );
-  }
-
-  if (status === "failed") {
-    return (
-      <li className="relative h-full overflow-hidden rounded-md border">
-        <p className="pointer-events-none absolute inset-0 grid place-items-center bg-black/80 text-sm text-white">
-          Failed
-        </p>
-        <Link href={`/result/${id}`}>
-          <img src={promptUrl} className="h-full w-full object-cover" />
-        </Link>
-      </li>
-    );
-  }
-
-  return (
-    <li className="relative h-full overflow-hidden rounded-md border">
-      <p className="pointer-events-none absolute inset-0 grid place-items-center bg-black/80 text-sm text-white">
-        In progress
-      </p>
-      <Link href={`/result/${id}`}>
-        <img src={promptUrl} className="h-full w-full object-cover" />
-      </Link>
-    </li>
-  );
-};

@@ -15,3 +15,14 @@ export async function GET(
 
   return NextResponse.json(toDTOPrompt(data));
 }
+
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const { id } = await params;
+
+  await sql("DELETE FROM prompts WHERE id = $1", [id]);
+
+  return NextResponse.json({ success: true });
+}

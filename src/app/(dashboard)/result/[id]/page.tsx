@@ -63,6 +63,8 @@ export default function ResultPage() {
                   <>
                     Processing...
                     <br />
+                    This may take up to a few minutes
+                    <br />
                     Page will refresh automatically.
                   </>
                 ) : null}

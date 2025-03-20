@@ -17,7 +17,14 @@ export default async function DashboardLayout({
       <footer className="border-t">
         <p className="p-4 text-center text-sm text-muted-foreground">
           Need more tokens or want to learn how we can fast-forward your AI
-          strategy with our GenAi for Fashion solutions? Reach out at [xxxx].
+          strategy with our GenAi for Fashion solutions? Reach out at{" "}
+          <a
+            href="mailto:mateusz.blum@tooploox.com"
+            className="underline underline-offset-4"
+          >
+            mateusz.blum@tooploox.com
+          </a>
+          .
         </p>
       </footer>
     </div>

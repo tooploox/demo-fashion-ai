@@ -68,9 +68,20 @@ export default function GeneratePage() {
                   key={key}
                   label={key}
                   options={values}
-                  onChange={(v) =>
-                    setOptions((prev) => ({ ...prev, [key]: v }))
-                  }
+                  selectedOptions={options}
+                  onChange={(v) => {
+                    setOptions((prev) => ({ ...prev, [key]: v }));
+
+                    if (key === "Location" && v === "Photo studio") {
+                      setOptions((prev) => ({ ...prev, Season: "" }));
+                    } else if (
+                      key === "Season" &&
+                      v === "Winter" &&
+                      options.Location === "Photo studio"
+                    ) {
+                      setOptions((prev) => ({ ...prev, Location: "" }));
+                    }
+                  }}
                   value={options[key] ?? ""}
                 />
               ))}

@@ -32,7 +32,6 @@ export default function AddUserPage() {
   });
 
   const invitations = useInvitations();
-  console.log(invitations);
   const user = useUser();
 
   useEffect(() => {

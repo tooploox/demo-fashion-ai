@@ -49,7 +49,7 @@ export async function createUser(prevState: unknown, formData: FormData) {
 
   await user.update({
     clientReadOnlyMetadata: {
-      tokens: 100,
+      tokens: 5,
     },
   });
 

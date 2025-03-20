@@ -58,7 +58,7 @@ export async function generate(
   }
 
   const resp = await fetch(
-    `${process.env.AI_GENERATION_URL}/development/async_predict`,
+    `https://model-${process.env.AI_GENERATION_MODEL_ID}.api.baseten.co/development/async_predict`,
     {
       method: "POST",
       headers: {

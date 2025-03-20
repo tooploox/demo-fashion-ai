@@ -1,5 +1,6 @@
 import { stackServerApp } from "@/stack";
 import { Topbar } from "./Topbar";
+import { wakeServer } from "./actions";
 
 export default async function DashboardLayout({
   children,
@@ -7,6 +8,7 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }>) {
   await stackServerApp.getUser({ or: "redirect" });
+  wakeServer();
 
   return (
     <div className="grid min-h-screen grid-rows-[auto_1fr_auto]">

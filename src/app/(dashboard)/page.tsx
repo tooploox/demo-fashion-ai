@@ -9,12 +9,12 @@ import { Item } from "./Item";
 
 const sql = neon(process.env.DATABASE_URL!);
 
-const examples = [
-  "https://plus.unsplash.com/premium_photo-1739899051410-af2e7a9c0f2e?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  "https://plus.unsplash.com/premium_photo-1739899051410-af2e7a9c0f2e?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  "https://plus.unsplash.com/premium_photo-1739899051410-af2e7a9c0f2e?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  "https://plus.unsplash.com/premium_photo-1739899051410-af2e7a9c0f2e?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-];
+// const examples = [
+//   "https://plus.unsplash.com/premium_photo-1739899051410-af2e7a9c0f2e?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+//   "https://plus.unsplash.com/premium_photo-1739899051410-af2e7a9c0f2e?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+//   "https://plus.unsplash.com/premium_photo-1739899051410-af2e7a9c0f2e?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+//   "https://plus.unsplash.com/premium_photo-1739899051410-af2e7a9c0f2e?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+// ];
 
 export default async function HomePage() {
   const user = await stackServerApp.getUser();
@@ -44,7 +44,7 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <div>
+          {/* <div>
             <p className="mb-4 text-sm font-semibold">Example images</p>
             <ul className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-4">
               {examples.map((url, index) => (
@@ -56,7 +56,7 @@ export default async function HomePage() {
                 </li>
               ))}
             </ul>
-          </div>
+          </div> */}
         </>
       ) : null}
 

@@ -5,9 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useActionState } from "react";
+import { useSearchParams } from "next/navigation";
 import { createUser } from "./actions";
 
 export default function RegisterPage() {
+  const searchParams = useSearchParams();
+  const invitationEmail = searchParams.get("invitation") || "";
+
   const [state, formAction, pending] = useActionState(createUser, {
     error: "",
   });
@@ -29,7 +33,8 @@ export default function RegisterPage() {
                 name="email"
                 id="email"
                 type="email"
-                placeholder="m@example.com"
+                value={invitationEmail}
+                readOnly
                 required
               />
             </div>

@@ -28,6 +28,6 @@ export async function createInvitation(prevState: unknown, formData: FormData) {
   ]);
 
   return {
-    inviteUrl: `/register?invitation=${email}`,
+    inviteUrl: `/register?invitation=${encodeURIComponent(email)}`,
   };
 }

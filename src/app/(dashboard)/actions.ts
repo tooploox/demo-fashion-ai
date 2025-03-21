@@ -1,5 +1,5 @@
 export const wakeServer = async () => {
-  const resp = await fetch(
+  await fetch(
     `https://model-${process.env.AI_GENERATION_MODEL_ID}.api.baseten.co/development/wake`,
     {
       method: "POST",
@@ -8,8 +8,4 @@ export const wakeServer = async () => {
       },
     },
   );
-
-  if (resp.status !== 202) {
-    throw new Error("Failed to wake server");
-  }
 };
